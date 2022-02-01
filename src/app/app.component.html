@@ -1,4 +1,60 @@
-<hello name="{{ name }}"></hello>
-<p>
-  Start editing to see some magic happen :)...
-</p>
+<div class="container">
+  <div class="columns is-centered">
+    <div class="box column is-one-third">
+      <h1 class="title has-text-centered">English vocabulary practice</h1>
+      <h1 class="is-centered">
+      <select name="tests" id="tests" [disabled]="testInProgress" (change)="selectTest(getValue($event))">
+        <option value="A1">Pick-up A I'm from Greenwich</option>
+        <option value="A2">Unit 3.2</option>
+        <option value="A3">Unit Jan 2022</option>
+        <option value="A4">Unit Jan 2 2022</option>
+      </select>
+    </h1>
+   <br>
+      <button (click)="onStartButtonClick()" class="button is-link is-fullwidth">
+        {{start}} the practice
+      </button>
+
+      <div class="field">
+        <label  *ngIf="testInProgress">{{getQuestion()}}</label>
+        <input  *ngIf="testInProgress" class="input" id="inputText" #inputText (change)='setText($event.target)'/>        
+      </div>
+
+      <button  *ngIf = "testInProgress" (click)="onNextButtonClick()" class="button is-link is-fullwidth">
+        Next
+      </button>
+      <br>
+      <button  *ngIf = "testInProgress" (click)="onPruefenButtonClick()" class="button is-link is-fullwidth">
+        Verify
+      </button>
+      <br>
+      <button  *ngIf = "testInProgress" (click)="onHintButtonClick()" class="button is-link is-fullwidth">
+        {{hint}}
+      </button>
+      <br>
+      <div>
+        <img src="/assets/img/ok.png" alt="image" [hidden]="!okBildVisible">
+        <img src="/assets/img/falsch.png" alt="image" [hidden]="!wrongBildVisible">
+      </div>
+      <table [hidden]="!showStatistics">
+        <tr>
+          <td>Test size:</td>
+          <td>{{testsLength}}</td>
+        </tr>
+        <tr>
+          <td>Answered questions:</td>
+          <td>{{answeredQuestions}}</td>
+        </tr>
+        <tr>
+          <td>Correctly answered:</td>
+          <td>{{correctAnswered}}</td>
+        </tr>
+        <tr>
+          <td>Hints used:</td>
+          <td>{{correctAnswered}}</td>
+        </tr>        
+      </table>
+    </div>
+
+  </div>
+</div>
