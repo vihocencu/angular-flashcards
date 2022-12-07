@@ -1,14 +1,18 @@
 import { AfterViewInit, Component, Directive, ElementRef, Input, ViewChild } from '@angular/core';
-import { a1 } from './a1';
-import { a2 } from './a2';
-import { a3 } from './a3';
-import { a4 } from './a4';
 import { FlashCard } from './flash';
 import { FlashService } from './flash.service';
+import { LessonService } from './lesson.service';
+import { ChallengeService } from './challenge.service';
+import {StatisticService } from './statistic.service';
+
+import { Lesson } from './lesson';
+import { Challenge } from './challenge';
+
+
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
+  templateUrl: './app.component.html',  
   styleUrls: ['./app.component.css']
 })
 
@@ -24,7 +28,6 @@ export class AppComponent {
   index = 0;
   testsLength = 0;
   inputText2 = "";
-  xyz = new  a1;
   questionsCount = 0;
   answeredQuestions = 0;
   correctAnswered = 0;
@@ -34,12 +37,72 @@ export class AppComponent {
   showStatistics: boolean = false;
   hintsUsed = 0;
   cards: FlashCard[] = [] ;
+  lessons: Lesson[] = [{id:0,title:"",language:""}];
+  challenges: Challenge[] = [];
+  challengesSize: number = 0;
+  user = "";
+  french = true;
+  english = true;
+  hintWasUsed: string = '0';
 
-  constructor(private flashService: FlashService) { }
+  constructor(private lessonService: LessonService, private challengeService: ChallengeService, private statisticService: StatisticService) {
+    this.loadLessons();
+  }
+
+  loadLessons() {
+    let languages : string;
+    languages = "";
+    if (this.french) {
+      languages = languages + 'fr,';
+    }
+    if (this.english) {
+      languages = languages + 'en,';
+    }
+    if (languages.length>0) {
+    languages = languages.substring(0,languages.length-1);
+    }
+	   this.lessonService.getLessons(languages, this.user).subscribe((response:Lesson[])=>{this.lessons = response;this.loadFirstTest();});
+
+  }
+  loadFirstTest() {
+    if (this.lessons.length>0) this.selectTest(this.lessons[0].id);else this.challengesSize = 0;
+  }
+  setFrench(event:any) {
+    this.challenges = [];
+    this.challengesSize =0;
+    this.lessons=[];
+    console.log(event.value);
+    console.log(event);
+    console.log(event.checked);
+    console.log(this.lessons);
+    this.french = event.checked;
+    this.loadLessons();
+    this.loadFirstTest();
+    }
+
+  setEnglish(event:any) {
+    this.lessons = [];
+    this.challenges = [];
+    this.challengesSize =0;
+    console.log(event.value);
+    console.log(event);
+    console.log(event.checked);
+    console.log(this.lessons);
+
+    this.english = event.checked;
+    this.loadLessons();
+    this. loadFirstTest();
+  }
 
   onStartButtonClick() {
+    console.log('onStartButtonClick');
+
+    if (this.challenges.length == 0) {    
+      console.log('this.challenges.length == 0');
+
+      return;
+    }
     this.index = 0;
-    console.log('OnClick');
     this.testInProgress = !this.testInProgress;
     console.log(this.testInProgress);
     this.checkBoxVisible = '';
@@ -49,9 +112,9 @@ export class AppComponent {
 
     if (this.testInProgress) {
       this.answeredQuestions = 0;
-      this.start = 'End';
+      this.start = 'End'; 
       this.correctAnswered = 0;
-      this.testsLength = this.xyz.getKeys().length;
+      this.testsLength = this.challenges.length;
       this.hintsUsed = 0;
     }
     else {
@@ -62,10 +125,10 @@ export class AppComponent {
   }
 
   getQuestion():string {
-    return this.xyz.getKey(this.index);
+    return this.challenges[this.index].question;
   }
   getAnswer():string {
-    return this.xyz.getValue(this.index);
+    return this.challenges[this.index].answer;
   }
   isTestInProgress() {
     return this.testInProgress;
@@ -75,35 +138,20 @@ export class AppComponent {
   }
 
   selectTest(s: any) {
-    console.log("SSSS"+s);
-    this.selectedTest = s;
-   
-      this.flashService.getCards()
-      .subscribe(cards => this.cards = cards);
-   
-      console.log(this.cards[0]);
-    if (s == "A1") {
-      this.xyz = new a1;
-    }
-    if (s == "A2") {
-      this.xyz = new a2;
-    }
-    if (s == "A3") {
-      this.xyz = new a3;
-    }
-    if (s == "A4") {
-      this.xyz = new a4;
-    }    
-    console.log(this.xyz.keys);
+    //this.challengeService.getChallenges().subscribe((response:Challenge[])=>{this.challenges = response});
+    this.challengeService.getChallengesForLessonId(s).subscribe((response:Challenge[])=>{this.challenges = response;this.challengesSize = this.challenges.length;});
+
   }
 
   onHintButtonClick() {
     	this.hint = this.getAnswer();
       this.hintsUsed ++;
+      this.hintWasUsed = '1';
   }
 
   onNextButtonClick() {
     this.pruefeEingabe();
+    this.hintWasUsed = '0';
     this.index = this.index + 1;
     this.testInProgress = this.index!=this.testsLength;
     if (!this.testInProgress) {
@@ -114,11 +162,13 @@ export class AppComponent {
       this.hintsUsed = 0;
       return;
     }
+
     this.inputText.nativeElement.value = "";
     console.log(this.index);
     this.okBildVisible = false;
     this.wrongBildVisible = false;
     this.hint = 'Hint';
+    
   }
 
   onPruefenButtonClick() {
@@ -138,6 +188,13 @@ export class AppComponent {
     console.log("in setText:"+event);
     this.inputText2 = event.value;
   }
+
+  setUser(event:any) {
+  console.log("in setText:"+event.value);
+  this.user =event.value;
+  this.loadLessons();
+  this.loadFirstTest();
+}
   pruefeEingabe() {
     let correct =  isAnswerCorrect(this.getAnswer(),this.inputText2.toLowerCase());
     console.log(normalizeText(this.getAnswer().toLowerCase())+' ' + normalizeText(this.inputText2.toLowerCase()+ ' '+correct));
@@ -145,8 +202,10 @@ export class AppComponent {
       this.correctAnswered++;
     }
     this.answeredQuestions++;
+    this.statisticService.saveStatistics(this.user, this.challenges[this.index].id+'', correct?'1':'0',this.hintWasUsed,this.getAnswer(),this.inputText2.toLowerCase()) .subscribe((response:number)=>{console.log('FINISHED:'+response);});;
+   
+
   }
-  
 }
 
 function isAnswerCorrect(expected: string, inputText2: string) {

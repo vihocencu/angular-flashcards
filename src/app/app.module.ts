@@ -4,6 +4,8 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { FlashService } from './flash.service';
+import { LessonService } from './lesson.service';
+
 
 @NgModule({
   declarations: [
@@ -13,7 +15,7 @@ import { FlashService } from './flash.service';
     BrowserModule,
     HttpClientModule
   ],
-  providers: [FlashService],
+  providers: [FlashService,LessonService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

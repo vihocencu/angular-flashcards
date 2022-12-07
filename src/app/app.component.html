@@ -1,16 +1,27 @@
+<br><br><br><br><br>
 <div class="container">
   <div class="columns is-centered">
     <div class="box column is-one-third">
-      <h1 class="title has-text-centered">English vocabulary practice</h1>
-      <h1 class="is-centered">
+      <h1 class="title has-text-centered">Vokabel Übungen</h1>
+      <input  class="input" id="user" #user (change)='setUser($event.target)'/>        
+
       <select name="tests" id="tests" [disabled]="testInProgress" (change)="selectTest(getValue($event))">
-        <option value="A1">Pick-up A I'm from Greenwich</option>
-        <option value="A2">Unit 3.2</option>
-        <option value="A3">Unit Jan 2022</option>
-        <option value="A4">Unit Jan 2 2022</option>
+        <option *ngFor="let lesson of lessons" 
+        [value]="lesson.id" >
+        {{lesson.title}}
+        </option>
       </select>
-    </h1>
-   <br>
+
+      <label>&nbsp;&nbsp;</label>
+      <input type="checkbox" [checked]='french' id="french" (change)='setFrench($event.target)'  name='French' [disabled]="testInProgress"/>
+      <label>Francais</label>
+      <label>&nbsp;&nbsp;</label>
+      <input type="checkbox" [checked]='english' id="english" (change)='setEnglish($event.target)' name='English' [disabled]="testInProgress"/>
+      <label>English</label>
+      
+    <br>
+    <label>Test size:</label><label>{{challengesSize}}</label>
+      <br>
       <button (click)="onStartButtonClick()" class="button is-link is-fullwidth">
         {{start}} the practice
       </button>
