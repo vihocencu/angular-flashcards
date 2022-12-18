@@ -202,7 +202,7 @@ export class AppComponent {
     let correct =  isAnswerCorrect(this.getAnswer(),this.inputText2.toLowerCase());
     let colou : string =  correct? "":"false";
     let summary :  Summary = {answer:this.inputText2.toLowerCase(),expected:this.getAnswer(),question:this.challenges[this.index].question,colour:colou};
-    this.answers[this.answers.length] = summary;
+    this.answers = [summary].concat( this.answers) ;
 
     console.log(normalizeText(this.getAnswer().toLowerCase())+' ' + normalizeText(this.inputText2.toLowerCase()+ ' '+correct));
     if (correct) {
