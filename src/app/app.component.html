@@ -1,4 +1,4 @@
-<br><br><br><br><br>
+<br>
 <div class="container">
   <div class="columns is-centered">
     <div class="box column is-one-third">
@@ -12,15 +12,14 @@
         </option>
       </select>
 
-      <label>&nbsp;&nbsp;</label>
+      <br>
       <input type="checkbox" [checked]='french' id="french" (change)='setFrench($event.target)'  name='French' [disabled]="testInProgress"/>
       <label>Francais</label>
       <label>&nbsp;&nbsp;</label>
       <input type="checkbox" [checked]='english' id="english" (change)='setEnglish($event.target)' name='English' [disabled]="testInProgress"/>
       <label>English</label>
-      
-    <br>
-    <label>Test size:</label><label>{{challengesSize}}</label>
+
+    <label>&nbsp;&nbsp;Test size:</label><label>{{challengesSize}}</label>
       <br>
       <button (click)="onStartButtonClick()" class="button is-link is-fullwidth">
         {{start}} the practice
@@ -35,18 +34,10 @@
         Next
       </button>
       <br>
-      <button  *ngIf = "testInProgress" (click)="onPruefenButtonClick()" class="button is-link is-fullwidth">
-        Verify
-      </button>
-      <br>
       <button  *ngIf = "testInProgress" (click)="onHintButtonClick()" class="button is-link is-fullwidth">
         {{hint}}
       </button>
       <br>
-      <div>
-        <img src="/assets/img/ok.png" alt="image" [hidden]="!okBildVisible">
-        <img src="/assets/img/falsch.png" alt="image" [hidden]="!wrongBildVisible">
-      </div>
       <table [hidden]="!showStatistics">
         <tr>
           <td>Test size:</td>
@@ -59,16 +50,11 @@
         <tr>
           <td>Correctly answered:</td>
           <td>{{correctAnswered}}</td>
-        </tr>
-        <tr>
-          <td>Hints used:</td>
-          <td>{{correctAnswered}}</td>
-        </tr>        
+        </tr>     
       </table>
-
-<br>
-<app-review [answers]="answers"></app-review>
     </div>
 
   </div>
 </div>
+<br><br>
+<app-review [answers]="answers"></app-review>

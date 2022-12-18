@@ -32,8 +32,6 @@ export class AppComponent {
   answeredQuestions = 0;
   correctAnswered = 0;
   hint = "Hint";
-  okBildVisible = false;
-  wrongBildVisible = false;
   showStatistics: boolean = false;
   hintsUsed = 0;
   cards: FlashCard[] = [] ;
@@ -122,8 +120,6 @@ export class AppComponent {
     }
     else {
       this.start = 'Start';
-      this.okBildVisible = false;
-      this.wrongBildVisible = false;
     }
   }
 
@@ -160,33 +156,16 @@ export class AppComponent {
     if (!this.testInProgress) {
       this.start = 'Start';
       this.showStatistics = true;
-      this.okBildVisible = false;
-      this.wrongBildVisible = false;
       this.hintsUsed = 0;
       return;
     }
 
     this.inputText.nativeElement.value = "";
     console.log(this.index);
-    this.okBildVisible = false;
-    this.wrongBildVisible = false;
     this.hint = 'Hint';
     
   }
 
-  onPruefenButtonClick() {
-    console.log(this.inputText2);
-    let expected = this.getAnswer();
-    console.log(expected);
-    if (isAnswerCorrect(expected,this.inputText2)) {
-      this.okBildVisible = true;
-      this.wrongBildVisible = false;
-    }
-    else {
-      this.okBildVisible = false;
-      this.wrongBildVisible = true;
-    }
-  }
   setText(event:any) {
     console.log("in setText:"+event);
     this.inputText2 = event.value;
@@ -201,7 +180,7 @@ export class AppComponent {
   pruefeEingabe() {
     let correct =  isAnswerCorrect(this.getAnswer(),this.inputText2.toLowerCase());
     let colou : string =  correct? "":"false";
-    let summary :  Summary = {answer:this.inputText2.toLowerCase(),expected:this.getAnswer(),question:this.challenges[this.index].question,colour:colou};
+    let summary :  Summary = {no:""+(this.index+1), answer:this.inputText2.toLowerCase(),expected:this.getAnswer(),question:this.challenges[this.index].question,colour:colou};
     this.answers = [summary].concat( this.answers) ;
 
     console.log(normalizeText(this.getAnswer().toLowerCase())+' ' + normalizeText(this.inputText2.toLowerCase()+ ' '+correct));
@@ -222,7 +201,13 @@ function isAnswerCorrect(expected: string, inputText2: string) {
 }
 
 function normalizeText(expected: string): string {
+  
   expected = expected.toLowerCase();
+  expected = expected.replace(" (of)", "");
+  expected = expected.replace("(of)", "");
+  expected = expected.replace(" (+noun)", "");
+  expected = expected.replace("(+noun)", "");
+  expected = expected.replace("to ", "");
   expected = expected.replace("I am", "I'm");
   expected = expected.replace("i am", "i'm");
   expected = expected.replace("I'am", "I am");

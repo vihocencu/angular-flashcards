@@ -1,15 +1,24 @@
-
+<div class="container">
+    <div class="columns is-centered">
+      <div class="box column is-one-third">
+  
   <table style="width:100%">
     <tr>
-    <th style="width:45%">Question</th>
+    <th style="width:5%">No&nbsp;</th>
+    <th style="width:40%">Question</th>
     <th style="width:25%">Expected</th>
     <th style="width:25%">Answer</th>
-    <th style="width:5%">Correct</th>
+    <th style="width:5%">&nbsp;</th>
   </tr>
     <tr *ngFor="let ans of answers">
+      <td>{{ans.no}}</td>
       <td>{{ans.question}}</td>
       <td>{{ans.expected}}</td>
       <td>{{ans.answer}}</td>
-      <td *ngIf="ans.colour" bgcolor="red">&nbsp;</td>
+      <img src="/assets/img/ok.png" alt="image" *ngIf="!ans.colour" width="20" height="20">
+      <img src="/assets/img/falsch.png" alt="image" *ngIf="ans.colour" width="20" height="20">
     </tr>
   </table>
+</div>
+</div>
+</div>
