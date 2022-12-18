@@ -4,7 +4,7 @@ import { FlashService } from './flash.service';
 import { LessonService } from './lesson.service';
 import { ChallengeService } from './challenge.service';
 import {StatisticService } from './statistic.service';
-
+import {Summary}from './summary';
 import { Lesson } from './lesson';
 import { Challenge } from './challenge';
 
@@ -44,6 +44,7 @@ export class AppComponent {
   french = true;
   english = true;
   hintWasUsed: string = '0';
+  answers: Summary[] = [];
 
   constructor(private lessonService: LessonService, private challengeService: ChallengeService, private statisticService: StatisticService) {
     this.loadLessons();
@@ -96,12 +97,12 @@ export class AppComponent {
 
   onStartButtonClick() {
     console.log('onStartButtonClick');
-
     if (this.challenges.length == 0) {    
       console.log('this.challenges.length == 0');
 
       return;
     }
+
     this.index = 0;
     this.testInProgress = !this.testInProgress;
     console.log(this.testInProgress);
@@ -116,6 +117,8 @@ export class AppComponent {
       this.correctAnswered = 0;
       this.testsLength = this.challenges.length;
       this.hintsUsed = 0;
+      this.answers = [];
+
     }
     else {
       this.start = 'Start';
@@ -197,6 +200,10 @@ export class AppComponent {
 }
   pruefeEingabe() {
     let correct =  isAnswerCorrect(this.getAnswer(),this.inputText2.toLowerCase());
+    let colou : string =  correct? "":"false";
+    let summary :  Summary = {answer:this.inputText2.toLowerCase(),expected:this.getAnswer(),question:this.challenges[this.index].question,colour:colou};
+    this.answers[this.answers.length] = summary;
+
     console.log(normalizeText(this.getAnswer().toLowerCase())+' ' + normalizeText(this.inputText2.toLowerCase()+ ' '+correct));
     if (correct) {
       this.correctAnswered++;

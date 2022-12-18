@@ -1,0 +1,15 @@
+
+  <table style="width:100%">
+    <tr>
+    <th style="width:45%">Question</th>
+    <th style="width:25%">Expected</th>
+    <th style="width:25%">Answer</th>
+    <th style="width:5%">Correct</th>
+  </tr>
+    <tr *ngFor="let ans of answers">
+      <td>{{ans.question}}</td>
+      <td>{{ans.expected}}</td>
+      <td>{{ans.answer}}</td>
+      <td *ngIf="ans.colour" bgcolor="red">&nbsp;</td>
+    </tr>
+  </table>
