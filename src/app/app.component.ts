@@ -159,11 +159,10 @@ export class AppComponent {
       this.hintsUsed = 0;
       return;
     }
-
+    this.inputText2 = '';
     this.inputText.nativeElement.value = "";
     console.log(this.index);
     this.hint = 'Hint';
-    
   }
 
   setText(event:any) {
