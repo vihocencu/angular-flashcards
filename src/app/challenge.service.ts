@@ -11,6 +11,8 @@ import { Observable } from 'rxjs';
 export class ChallengeService {
   url = 'http://localhost:8080/challenge/';
   urlForLesson = 'http://localhost:8080/challengesForLesson/';
+  urlForMostMissed = 'http://localhost:8080/challenge/mostmissed/';
+
 constructor(
     private http: HttpClient) { }
 
@@ -25,6 +27,16 @@ constructor(
 
   getChallengesForLessonId(s: any) : Observable<Challenge[]> {
     return this.http.get(this.urlForLesson+s, {
+    }).pipe(
+      map((res: any) => {
+        return res; 
+      })
+    );
+  }
+
+  getMostMissedForUser(user: any) : Observable<Challenge[]> {
+    console.log("in mossed missed");
+    return this.http.get(this.urlForMostMissed+user, {
     }).pipe(
       map((res: any) => {
         return res; 

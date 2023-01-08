@@ -138,8 +138,14 @@ export class AppComponent {
 
   selectTest(s: any) {
     //this.challengeService.getChallenges().subscribe((response:Challenge[])=>{this.challenges = response});
+    console.log("select test"+s);
+    if (s!='0') {
     this.challengeService.getChallengesForLessonId(s).subscribe((response:Challenge[])=>{this.challenges = response;this.challengesSize = this.challenges.length;});
+    }
+    else {
+      this.challengeService.getMostMissedForUser(this.user).subscribe((response:Challenge[])=>{this.challenges = response;this.challengesSize = this.challenges.length;});
 
+    }
   }
 
   onHintButtonClick() {
